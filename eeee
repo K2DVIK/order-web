@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bro Oldala</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1:#071026;
+      --card:#071226aa;
+      --muted:rgba(229,231,235,.8);
+      --accent-1:#60a5fa;
+      --accent-2:#22c55e;
+      --glass: rgba(255,255,255,.04);
+      --glass-2: rgba(255,255,255,.02);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(1200px 600px at 10% 10%, #0b1220 0%, #020617 60%);
+      color: var(--muted);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .card {
+      width: min(980px, 94vw);
+      background: linear-gradient(180deg, rgba(6,10,23,.6), rgba(2,6,23,.7));
+      border: 1px solid rgba(148,163,184,.06);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(2,6,23,.6), 0 4px 12px rgba(2,6,23,.4) inset;
+      padding: 28px 28px 34px 28px;
+      position: relative;
+    }
+    .glow {
+      position: absolute; inset: -2px; border-radius: 22px;
+      filter: blur(26px);
+      background: linear-gradient(120deg, var(--accent-2), var(--accent-1), #a855f7);
+      opacity: .12; z-index: -1;
+    }
+    header { display: grid; gap: 10px; }
+    h1 { font-size: clamp(26px, 3.6vw, 40px); margin: 0; font-weight:800; color:#fff; letter-spacing:-0.6px }
+    .tag { color: var(--accent-1); font-weight:600 }
+    header p{ color: rgba(229,231,235,.75); margin:0 }
+    .grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 22px; margin-top: 18px; }
+    @media (max-width: 780px){ .grid{ grid-template-columns: 1fr; } }
+    .panel {
+      background: linear-gradient(180deg,var(--glass), var(--glass-2));
+      border: 1px solid rgba(148,163,184,.06);
+      border-radius: 14px; padding: 18px;
+    }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    button {
+      background: linear-gradient(120deg, var(--accent-2), var(--accent-1));
+      color: #021024; border: 0; border-radius: 12px;
+      padding: 10px 14px; font-weight:700; cursor: pointer; font-size:15px;
+      transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
+      box-shadow: 0 10px 26px rgba(59,130,246,.18);
+    }
+    button.alt { background: transparent; color: #e5e7eb; border: 1px solid rgba(148,163,184,.3); box-shadow: none; }
+    button:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    input, textarea {
+      width:100%; padding:10px 12px; border-radius:10px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.03); color:var(--muted);
+      outline: none; transition: box-shadow .12s ease, border-color .12s ease;
+    }
+    input:focus, textarea:focus{ box-shadow:0 6px 18px rgba(59,130,246,.06); border-color: rgba(96,165,250,.6); }
+    label{ font-size:13px; color:rgba(229,231,235,.85) }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 8px 0; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .stat { text-align: center; background: rgba(2,6,23,.6); border: 1px solid rgba(148,163,184,.12); border-radius: 14px; padding: 14px; }
+    .num { font-size: 28px; font-weight: 900; }
+    footer { margin-top: 14px; opacity: .7; font-size: 12px; }
+    .toast {
+      position: fixed; right: 18px; bottom: 18px;
+      background: rgba(0,6,20,.9); border: 1px solid rgba(148,163,184,.06);
+      border-radius: 12px; padding: 10px 12px; display: none; color: #dbeafe; box-shadow:0 8px 30px rgba(2,6,23,.6);
+    }
+    .panel .panel{ padding:12px; border-radius:10px }
+    .orders-empty { opacity:.8; font-size:14px }
+    /* UI helpers */
+    .title{ margin-bottom:6px; color:#fff; font-weight:700 }
+    .lead{ margin:0 0 10px 0; color:rgba(229,231,235,.76) }
+    #orderForm{ margin-top:12px }
+    .form-actions{ display:flex; gap:10px; align-items:center }
+    .form-actions .muted{ margin-left:auto; color:rgba(255,255,255,.6); font-size:13px }
+    .auth-form{ margin-top:8px }
+    .auth-hint{ margin-top:8px; font-size:12px; opacity:.8 }
+    .admin-info{ margin-bottom:8px; color:rgba(229,231,235,.8) }
+    .hidden{ display:none }
+    .meta{ opacity:.7; font-size:12px }
+    @media (max-width:520px){ .form-actions{ flex-direction:column; align-items:stretch } .form-actions .muted{ margin-left:0 } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="glow"></div>
+    <header>
+      <h1>Csao bro 😎 <span class="tag">— ez egy kurva jó egyoldalas site</span></h1>
+      <p>Dark mód, smooth anim, minimál dizájn. Feltöltöd → mindenki látja. Kész.</p>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+      <h3 class="title">Küldj be cuccot (amit megrendeljek)</h3>
+      <p class="lead">Az emberek ide beküldik a terméket, te meg mindent látsz egy inboxban.</p>
+      <form id="orderForm" class="panel" >
+        <label>Név<br><input required placeholder="Ki vagy te?" id="name" /></label><br><br>
+        <label>Termék link<br><input required placeholder="https://" id="link" /></label><br><br>
+        <label>Méret / extra infó<br><input placeholder="pl. 43 / fekete" id="extra" /></label><br><br>
+        <label>Megjegyzés<br><textarea placeholder="Bármi fontos" id="note"></textarea></label><br><br>
+        <div class="form-actions">
+          <button type="submit">Megrendel</button>
+          <button type="button" class="alt" id="clearLocalBtn">Törlés</button>
+          <div class="muted">Gyorsküldő</div>
+        </div>
+        </form>
+        <div id="localInbox" class="panel" style="margin-top:12px">
+          <div class="orders-empty">Helyi beküldések (demo):</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Inbox (csak te látod ezen a gépen)</h3>
+        <p>Katt → látod ki mit kért. (Demo: localStorage)</p>
+        <div id="inbox">
+          <div id="authUI">
+            <div id="signedOut">
+              <form id="adminSignIn" class="auth-form">
+                <label>Email<br><input id="adminEmail" type="email" placeholder="admin@you.com" /></label><br><br>
+                <label>Jelszó<br><input id="adminPass" type="password" placeholder="••••••" /></label><br><br>
+                <button type="submit" class="alt">Bejelentkezés</button>
+              </form>
+              <p class="auth-hint">Bejelentkezés után látod az inboxot (Firebase Authentication szükséges).</p>
+            </div>
+            <div id="signedIn" class="hidden">
+              <div id="adminInfo" class="admin-info"></div>
+              <div id="ordersList"><div class="orders-empty panel">Nincs még rendelés.</div></div>
+              <button class="alt" id="signOutBtn">Kijelentkezés</button>
+            </div>
+          </div>
+        </div>
+        <button class="alt hidden" id="clearBtn">Inbox törlés</button>
+      </div>
+    </section>
+
+    <footer>© 2025 Bro Oldala — csináld meg, töltsd fel, kész.</footer>
+  </div>
+
+  <div class="toast" id="toast">Hello</div>
+
+  <script>
+    let c = 0;
+    const key = 'orders_v1';
+
+    function toast(t){
+      const el = document.getElementById('toast');
+      el.innerText = t; el.style.display = 'block';
+      setTimeout(()=> el.style.display='none', 1800);
+    }
+
+    function load(){
+      const localInbox = document.getElementById('localInbox');
+      localInbox.innerHTML = '<div class="orders-empty">Helyi beküldések (demo):</div>';
+      const items = JSON.parse(localStorage.getItem(key) || '[]');
+      items.forEach((o,i)=>{
+        const d = document.createElement('div');
+        d.className='panel';
+        d.innerHTML = `<b>#${i+1}</b><br><b>Név:</b> ${o.name||'-'}<br><b>Link:</b> <a href="${o.link}" target="_blank">megnyit</a><br><b>Extra:</b> ${o.extra||'-'}<br><b>Note:</b> ${o.note||'-'}`;
+        localInbox.appendChild(d);
+      });
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      // Form submission is handled by the Firebase module (adds to Firestore and falls back to localStorage)
+    });
+
+    function clearAll(){ localStorage.removeItem(key); load(); }
+
+    // Local delete button for left-side demo inbox
+    document.getElementById('clearLocalBtn').addEventListener('click', ()=>{
+      if (!confirm('Törölni akarod a helyi beküldéseket?')) return;
+      localStorage.removeItem(key);
+      load();
+      toast('Helyi beküldések törölve');
+    });
+
+    load();
+  </script>
+  
+
+<script type="module">
+  import { firebaseConfig } from './firebase-config.js';
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, addDoc, collection, query, orderBy, onSnapshot, serverTimestamp, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const ordersListEl = document.getElementById('ordersList');
+  const adminInfo = document.getElementById('adminInfo');
+  const signedInDiv = document.getElementById('signedIn');
+  const signedOutDiv = document.getElementById('signedOut');
+  const clearBtn = document.getElementById('clearBtn');
+
+  let unsub = null;
+
+  function renderOrders(snapshot) {
+    ordersListEl.innerHTML = '';
+    snapshot.forEach(docSnap => {
+      const o = docSnap.data();
+      const d = document.createElement('div');
+      d.className = 'panel';
+      d.innerHTML = `<b>#${docSnap.id}</b><br><b>Név:</b> ${o.name||'-'}<br><b>Link:</b> <a href="${o.link}" target="_blank">megnyit</a><br><b>Extra:</b> ${o.extra||'-'}<br><b>Note:</b> ${o.note||'-'}<div class="meta">${o.createdAt && o.createdAt.seconds ? new Date(o.createdAt.seconds*1000).toLocaleString() : ''}</div>`;
+      ordersListEl.appendChild(d);
+    });
+  }
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      signedOutDiv.classList.add('hidden');
+      signedInDiv.classList.remove('hidden');
+      adminInfo.innerText = `Bejelentkezve mint: ${user.email}`;
+      clearBtn.classList.remove('hidden');
+      const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+      unsub = onSnapshot(q, renderOrders, err => {
+        console.error('snapshot err', err);
+        ordersListEl.innerHTML = '<div class="panel">Hiba a betöltéskor.</div>';
+      });
+    } else {
+      signedOutDiv.classList.remove('hidden');
+      signedInDiv.classList.add('hidden');
+      adminInfo.innerText = '';
+      clearBtn.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('adminSignIn').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('adminEmail').value;
+    const pass = document.getElementById('adminPass').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      toast('Sikeres bejelentkezés');
+    } catch (err) {
+      console.error(err);
+      toast('Bejelentkezés hiba: ' + (err.message || err));
+    }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+
+  clearBtn.addEventListener('click', async () => {
+    if (!confirm('Biztos törlöd az összes rendelést?')) return;
+    try {
+      const snap = await getDocs(collection(db, 'orders'));
+      for (const d of snap.docs) {
+        await deleteDoc(doc(db, 'orders', d.id));
+      }
+      toast('Inbox törölve');
+    } catch (err) {
+      console.error(err);
+      toast('Törlés hiba: ' + (err.message || err));
+    }
+  });
+
+  // Handle form submit: try Firestore, fallback to localStorage
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const link = document.getElementById('link').value;
+    const extra = document.getElementById('extra').value;
+    const note = document.getElementById('note').value;
+
+    // optimistic local storage
+    const items = JSON.parse(localStorage.getItem(key) || '[]');
+    items.unshift({ name, link, extra, note, ts: Date.now() });
+    localStorage.setItem(key, JSON.stringify(items));
+    load();
+
+    try {
+      await addDoc(collection(db, 'orders'), {
+        name,
+        link,
+        extra,
+        note,
+        createdAt: serverTimestamp()
+      });
+      e.target.reset();
+      toast('Megrendelve — köszi!');
+    } catch (err) {
+      console.error('FireStore submit error', err);
+      toast('Hálózati hiba, elmentve helyben.');
+    }
+  });
+</script>
+
+</body>
+
+</html>
